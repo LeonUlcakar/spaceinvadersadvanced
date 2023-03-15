@@ -3,31 +3,31 @@
 #include <windows.h>
 using namespace std;
 
-const int WIDTH = 40;
-const int HEIGHT = 20;
-const int PLAYER_START_X = WIDTH / 2;
-const int PLAYER_START_Y = HEIGHT - 2;
-const int ENEMY_START_X = 1;
-const int ENEMY_START_Y = 1;
-const int ENEMY_SPACING = 6;
-int numOfEnemies = 5;
+const unsigned int WIDTH = 40;
+const unsigned int HEIGHT = 20;
+const unsigned int PLAYER_START_X = WIDTH / 2;
+const unsigned int PLAYER_START_Y = HEIGHT - 2;
+const unsigned int ENEMY_START_X = 1;
+const unsigned int ENEMY_START_Y = 1;
+const unsigned int ENEMY_SPACING = 6;
+const unsigned int numOfEnemies = 5;
 bool gameOver = false;
-int score = 0;
+int unsigned score = 0;
 
 struct player {
-	int playerX = WIDTH / 2;
-	int playerY = HEIGHT - 1;
-	int bulletX = playerX;
-	int bulletY = playerY - 1;
+	int unsigned playerX = WIDTH / 2;
+	int unsigned playerY = HEIGHT - 1;
+	int unsigned bulletX = playerX;
+	int unsigned bulletY = playerY - 1;
 	bool isFiring = false;
 };
 
 struct enemy {
-	int enemyX;
-	int enemyY;
+	int unsigned enemyX;
+	int unsigned enemyY;
 	bool enemyIsFiring = false;
-	int enemyBulletX;
-	int enemyBulletY;
+	int unsigned enemyBulletX;
+	int unsigned enemyBulletY;
     bool isAlive;
 };
 
@@ -184,7 +184,6 @@ void moveBullets(player p1, enemy enemies[]) {
                 enemies[i].enemyY = ' ';
                 p1.bulletX = ' ';
                 p1.bulletY = ' ';
-                numOfEnemies--;
                 score += 10;
             }
         }
@@ -208,13 +207,13 @@ int main() {
     struct player player1;
     struct enemy enemies[numOfEnemies]{};
     playerInit(player1);
-    enemyInit(enemies[numOfEnemies]);
+    enemyInit(enemies);
     char input;
 
     while (!gameOver) {
-        drawBoard(player1, enemies[]);
-        moveEnemies(enemies[], player1);
-        moveBullets(player1, enemies[]);
+        drawBoard(player1, enemies);
+        moveEnemies(enemies, player1);
+        moveBullets(player1, enemies);
         if (_kbhit()) {
             input = _getch();
             movePlayer(input, player1);
