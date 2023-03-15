@@ -92,7 +92,7 @@ void enemyInit(enemy enemies[]) {
         }
         else {
             enemies[i].enemyX = enemies[i - 1].enemyX + ENEMY_SPACING;
-            enemies[i].enemyY = enemies[i - 1].enemyY + ENEMY_SPACING;
+            enemies[i].enemyY = enemies[i - 1].enemyY;
         }
         enemies[i].enemyIsFiring = false;
     }
