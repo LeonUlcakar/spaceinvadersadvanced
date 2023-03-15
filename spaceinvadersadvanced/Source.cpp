@@ -211,13 +211,14 @@ int main() {
     char input;
 
     while (!gameOver) {
-        drawBoard(player1, enemies);
         moveEnemies(enemies, player1);
         moveBullets(player1, enemies);
+        drawBoard(player1, enemies);
         if (_kbhit()) {
             input = _getch();
             movePlayer(input, player1);
         }
+
         Sleep(100);
     }
     cout << "GAME OVER";
