@@ -23,12 +23,12 @@ struct player {
 };
 
 struct enemy {
-	int unsigned enemyX;
-	int unsigned enemyY;
+	int unsigned enemyX = 0 ;
+	int unsigned enemyY = 0;
 	bool enemyIsFiring = false;
-	int unsigned enemyBulletX;
-	int unsigned enemyBulletY;
-    bool isAlive;
+	int unsigned enemyBulletX =0;
+	int unsigned enemyBulletY = 0;
+    bool isAlive = true;
 };
 
 void drawBoard(player p1, enemy enemies[]) {
@@ -79,7 +79,7 @@ void drawBoard(player p1, enemy enemies[]) {
     cout << "Score: " << score << endl;
 }
 
-void playerInit(player p1) {
+void playerInit(player &p1) {
     p1.playerX = WIDTH / 2;
     p1.playerY = HEIGHT - 1;
 }
@@ -98,7 +98,7 @@ void enemyInit(enemy enemies[]) {
     }
 }
 
-void movePlayer(char input, player p1) {
+void movePlayer(char input, player &p1) {
     switch (input) {
     case 'a':
         if (p1.playerX > 0) {
@@ -113,7 +113,7 @@ void movePlayer(char input, player p1) {
     case ' ':
         if (!p1.isFiring) {
             p1.bulletX = p1.playerX;
-            p1.bulletY = p1.playerY + 1;
+            p1.bulletY = p1.playerY - 1;
             p1.isFiring = true;
         }
         break;
@@ -123,7 +123,7 @@ void movePlayer(char input, player p1) {
     }
 }
 
-void moveEnemies(enemy enemies[], player p1) {
+void moveEnemies(enemy enemies[], player &p1) {
     static int enemyDirection = 1;
     static bool enemyReachedEdge = false;
     for (int i = 0; i < numOfEnemies; i++) {
