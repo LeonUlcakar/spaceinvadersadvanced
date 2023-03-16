@@ -113,7 +113,7 @@ void movePlayer(char input, player &p1) {
     case ' ':
         if (!p1.isFiring) {
             p1.bulletX = p1.playerX;
-            p1.bulletY = p1.playerY - 1;
+            p1.bulletY = p1.playerY + 1;
             p1.isFiring = true;
         }
         break;
