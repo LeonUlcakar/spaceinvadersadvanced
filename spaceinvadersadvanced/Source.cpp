@@ -79,9 +79,59 @@ void drawBoard(player p1, enemy enemies[]) {
     cout << "Score: " << score << endl;
 }
 
+/*
+void drawBoard(player p1, enemy enemies[]) {
+    system("cls");
+    for (int i = 0; i < WIDTH + 2; i++) {
+        cout << "-";
+    }
+    cout << endl;
+    for (int i = 0; i < HEIGHT; i++) {
+        for (int j = 0; j < WIDTH; j++) {
+            if (j == 0) {
+                cout << "|";
+            }
+            if (i == p1.playerY && j == p1.playerX) {
+                cout << "A";
+            }
+            else if (i == p1.bulletY && j == p1.bulletX) {
+                cout << "*";
+            }
+            else {
+                bool enemyAlive = false;
+                for (int k = 0; k < numOfEnemies; k++) {
+                    if (i == enemies[k].enemyY && j == enemies[k].enemyX) {
+                        cout << "M";
+                        enemyAlive = true;
+                        break;
+                    }
+                    else if (i == enemies[k].enemyBulletY && j == enemies[k].enemyBulletX) {
+                        cout << "*";
+                        enemyAlive = true;
+                        break;
+                    }
+                }
+                if (!enemyAlive) {
+                    cout << " ";
+                }
+            }
+            if ((j == WIDTH - 1)) {
+                cout << "|";
+            }
+        }
+        cout << endl;
+    }
+    for (int i = 0; i < WIDTH + 2; i++) {
+        cout << "-";
+    }
+    cout << endl;
+    cout << "Score: " << score << endl;
+}
+*/
 void playerInit(player &p1) {
     p1.playerX = WIDTH / 2;
     p1.playerY = HEIGHT - 1;
+    p1.isFiring = false;
 }
 
 void enemyInit(enemy enemies[]) {
@@ -127,7 +177,7 @@ void moveEnemies(enemy enemies[], player &p1) {
     static int enemyDirection = 1;
     static bool enemyReachedEdge = false;
     for (int i = 0; i < numOfEnemies; i++) {
-        if (enemies[i].enemyX == 0) {
+        if (enemies[0].enemyX == 0) {
             enemyDirection = 1;
             enemyReachedEdge = true;
         }
@@ -149,7 +199,7 @@ void moveEnemies(enemy enemies[], player &p1) {
         }
         if (enemies[i].enemyIsFiring == true) {
             enemies[i].enemyBulletY++;
-            if (enemies[i].enemyBulletY++ == p1.playerY && enemies[i].enemyBulletX++ == p1.playerX) {
+            if (enemies[i].enemyBulletY == p1.playerY && enemies[i].enemyBulletX == p1.playerX) {
                 gameOver = true;
             }
             else if (enemies[i].enemyBulletY == HEIGHT - 1) {
@@ -170,10 +220,10 @@ void moveEnemies(enemy enemies[], player &p1) {
     }
 }
 
-void moveBullets(player p1, enemy enemies[]) {
+void moveBullets(player &p1, enemy enemies[]) {
     if (p1.isFiring) {
         p1.bulletY--;
-        if (p1.bulletY < 0) {
+        if (p1.bulletY <= 0) {
             p1.isFiring = false;
             p1.bulletX = ' ';
         }
@@ -182,8 +232,8 @@ void moveBullets(player p1, enemy enemies[]) {
                 p1.isFiring = false;
                 enemies[i].enemyX = ' ';
                 enemies[i].enemyY = ' ';
-                p1.bulletX = ' ';
-                p1.bulletY = ' ';
+                //p1.bulletX = ' ';
+                //p1.bulletY = ' ';
                 score += 10;
             }
         }
