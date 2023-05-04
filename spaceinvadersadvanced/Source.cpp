@@ -11,8 +11,10 @@ const unsigned int ENEMY_START_X = 1;
 const unsigned int ENEMY_START_Y = 1;
 const unsigned int ENEMY_SPACING = 6;
 const unsigned int numOfEnemies = 5;
+const unsigned int rows = 4;
 bool gameOver = false;
 int unsigned score = 0;
+const unsigned int totalNumOfEn = rows * numOfEnemies;
 
 struct player {
     int unsigned playerX = WIDTH / 2;
@@ -50,7 +52,7 @@ void drawBoard(player p1, enemy enemies[]) {
             }
             else {
                 bool enemyAlive = false;
-                for (int k = 0; k < numOfEnemies; k++) {
+                for (int k = 0; k < totalNumOfEn; k++) {
                     if (i == enemies[k].enemyY && j == enemies[k].enemyX) {
                         cout << "M";
                         enemyAlive = true;
@@ -86,19 +88,35 @@ void playerInit(player& p1) {
 }
 
 void enemyInit(enemy enemies[]) {
-    for (int i = 0; i < numOfEnemies; i++) {
-        if (i == 0) {
-            enemies[i].enemyX = ENEMY_START_X;
-            enemies[i].enemyY = ENEMY_START_Y;
+    for (int j = 0; j < rows; j++) {
+        for (int i = 0; i < numOfEnemies; i++) {
+            enemies[j * numOfEnemies + i].enemyX = ENEMY_START_X + i * ENEMY_SPACING;
+            enemies[j * numOfEnemies + i].enemyY = ENEMY_START_Y + j;
+            enemies[j * numOfEnemies + i].enemyIsFiring = false;
+            enemies[j * numOfEnemies + i].isAlive = true;
         }
-        else {
-            enemies[i].enemyX = enemies[i - 1].enemyX + ENEMY_SPACING;
-            enemies[i].enemyY = enemies[i - 1].enemyY;
-        }
-        enemies[i].enemyIsFiring = false;
     }
 }
 
+/*
+void enemyInit(enemy enemies[]) {
+    for (int j = 0; j < rows; j++) {
+        for (int i = 0; i < numOfEnemies; i++) {
+            if (i == 0) {
+                enemies[i].enemyX = ENEMY_START_X;
+                enemies[i].enemyY = ENEMY_START_Y + j;
+            }
+            else {
+                enemies[i].enemyX = enemies[i - 1].enemyX + ENEMY_SPACING;
+                enemies[i].enemyY = enemies[i - 1].enemyY;
+            }
+            enemies[i].enemyIsFiring = false;
+        }
+    }
+    
+    
+}
+*/
 void movePlayer(char input, player& p1) {
     switch (input) {
     case 'a':
@@ -128,26 +146,26 @@ void movePlayer(char input, player& p1) {
 
 void moveEnemies(enemy enemies[], player &p1) {
     static int enemyDirection = 1;
-    //static bool enemyReachedEdge = false;
-    for (int i = 0; i < numOfEnemies; i++) {
+    for (int i = 0; i < totalNumOfEn; i++) {
         if (enemies[i].isAlive) {
-
             if (enemies[i].enemyX <= 0) {
                 enemyDirection = 1;
-                //enemyReachedEdge = true;
-                for (int j = 0; j < numOfEnemies; j++) {
+                enemies[i].enemyY++;
+                /*
+                for (int j = 0; j < totalNumOfEn; j++) {
                     enemies[j].enemyY++;
                 }
+                */
             }
             else if (enemies[i].enemyX == WIDTH - 1) {
                 enemyDirection = -1;
-                //enemyReachedEdge = true;
-                for (int j = 0; j < numOfEnemies; j++) {
+                for (int j = 0; j < totalNumOfEn; j++) {
                     enemies[j].enemyY++;
+                    
                 }
             }
             else {
-                //enemyReachedEdge = false;
+
             }
             if (enemies[i].enemyIsFiring == false) {
                 srand(time(NULL));
@@ -172,21 +190,7 @@ void moveEnemies(enemy enemies[], player &p1) {
             }
         }
     }
-    /*
-    if (enemyReachedEdge) {
-        for (int i = 0; i < numOfEnemies; i++) {
-            enemies[i].enemyY++;
-            enemies[i].enemyX += enemyDirection;
-        }
-    }
-    
-    else {
-        for (int i = 0; i < numOfEnemies; i++) {
-            enemies[i].enemyX += enemyDirection;
-        }
-    }
-    */
-    for (int i = 0; i < numOfEnemies; i++) {
+    for (int i = 0; i < totalNumOfEn; i++) {
         enemies[i].enemyX += enemyDirection;
     }
 }
@@ -198,7 +202,7 @@ void moveBullets(player& p1, enemy enemies[]) {
             p1.isFiring = false;
             p1.bulletX = ' ';
         }
-        for (int i = 0; i <= numOfEnemies; i++) {
+        for (int i = 0; i <= totalNumOfEn; i++) {
             if (p1.bulletY == enemies[i].enemyY && p1.bulletX == enemies[i].enemyX) {
                 p1.isFiring = false;
                 enemies[i].enemyX = ' ';
@@ -210,7 +214,7 @@ void moveBullets(player& p1, enemy enemies[]) {
             }
         }
     }
-    for (int i = 0; i <= numOfEnemies; i++) {
+    for (int i = 0; i <= totalNumOfEn; i++) {
         if (enemies[i].enemyIsFiring) {
             enemies[i].enemyBulletY++;
             if (enemies[i].enemyBulletY > HEIGHT) {
@@ -227,7 +231,7 @@ void moveBullets(player& p1, enemy enemies[]) {
 int main() {
     srand(time(NULL));
     struct player player1;
-    struct enemy enemies[numOfEnemies]{};
+    struct enemy enemies[totalNumOfEn]{};
     playerInit(player1);
     enemyInit(enemies);
     char input;
@@ -247,6 +251,33 @@ int main() {
     return 0;
 }
 
+/*
+void enemyInit(enemy enemies[]) {
+    for (int i = 0; i < numOfEnemies / 2; i++) {
+        if (i == 0) {
+            enemies[i].enemyX = ENEMY_START_X;
+            enemies[i].enemyY = ENEMY_START_Y;
+        }
+        else {
+            enemies[i].enemyX = enemies[i - 1].enemyX + ENEMY_SPACING;
+            enemies[i].enemyY = enemies[i - 1].enemyY;
+        }
+        enemies[i].enemyIsFiring = false;
+    }
+    for (int j = 0; j < numOfEnemies / 2; j++) {
+        if (j == 0) {
+            enemies[j].enemyX = ENEMY_START_X;
+            enemies[j].enemyY = ENEMY_START_Y + 1;
+        }
+        else {
+            enemies[j].enemyX = enemies[j - 1].enemyX + ENEMY_SPACING;
+            enemies[j].enemyY = enemies[j - 1].enemyY;
+        }
+        enemies[j].enemyIsFiring = false;
+    }
+}
+
+*/
 /*
 void drawBoard(player p1, enemy enemies[]) {
     system("cls");
