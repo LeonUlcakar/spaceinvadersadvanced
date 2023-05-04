@@ -124,69 +124,30 @@ void movePlayer(char input, player& p1) {
     }
 }
 
-/*
-void moveEnemies(enemy enemies[], player& p1) {
-    static int enemyDirection = 1;
-    static bool enemyReachedEdge = false;
-    for (int i = 0; i < numOfEnemies; i++) {
-        if (enemies[i].isAlive) {
-            if (enemies[i].enemyX == 0 && enemies[i].isAlive == true) {
-                enemyDirection = 1;
-                enemyReachedEdge = true;
-            }
-            else if (enemies[i].enemyX == WIDTH - 1) {
-                enemyDirection = -1;
-                enemyReachedEdge = true;
-            }
-            else {
-                enemyReachedEdge = false;
-            }
-            if (enemies[i].enemyIsFiring == false) {
-                srand(time(NULL));
-                int chance = rand() % 20;
-                if (chance == 0) {
-                    enemies[i].enemyIsFiring = true;
-                    enemies[i].enemyBulletX = enemies[i].enemyX;
-                    enemies[i].enemyBulletY = enemies[i].enemyY + 1;
-                }
-            }
-            if (enemies[i].enemyIsFiring == true) {
-                enemies[i].enemyBulletY++;
-                if (enemies[i].enemyBulletY == p1.playerY && enemies[i].enemyBulletX == p1.playerX) {
-                    gameOver = true;
-                    return;
-                }
-            }
-            enemies[i].enemyX += enemyDirection;
-        }
-    }
-    // Move enemies down if they have reached the edge
-    if (enemyReachedEdge) {
-        for (int i = 0; i < numOfEnemies; i++) {
-            if (enemies[i].isAlive) {
-                enemies[i].enemyY++;
-            }
-        }
-    }
-}
-*/
+
 
 void moveEnemies(enemy enemies[], player &p1) {
     static int enemyDirection = 1;
-    static bool enemyReachedEdge = false;
+    //static bool enemyReachedEdge = false;
     for (int i = 0; i < numOfEnemies; i++) {
         if (enemies[i].isAlive) {
 
-            if (enemies[i].enemyX == 0) {
+            if (enemies[i].enemyX <= 0) {
                 enemyDirection = 1;
-                enemyReachedEdge = true;
+                //enemyReachedEdge = true;
+                for (int j = 0; j < numOfEnemies; j++) {
+                    enemies[j].enemyY++;
+                }
             }
             else if (enemies[i].enemyX == WIDTH - 1) {
                 enemyDirection = -1;
-                enemyReachedEdge = true;
+                //enemyReachedEdge = true;
+                for (int j = 0; j < numOfEnemies; j++) {
+                    enemies[j].enemyY++;
+                }
             }
             else {
-                enemyReachedEdge = false;
+                //enemyReachedEdge = false;
             }
             if (enemies[i].enemyIsFiring == false) {
                 srand(time(NULL));
@@ -211,16 +172,22 @@ void moveEnemies(enemy enemies[], player &p1) {
             }
         }
     }
+    /*
     if (enemyReachedEdge) {
         for (int i = 0; i < numOfEnemies; i++) {
             enemies[i].enemyY++;
             enemies[i].enemyX += enemyDirection;
         }
     }
+    
     else {
         for (int i = 0; i < numOfEnemies; i++) {
             enemies[i].enemyX += enemyDirection;
         }
+    }
+    */
+    for (int i = 0; i < numOfEnemies; i++) {
+        enemies[i].enemyX += enemyDirection;
     }
 }
 
@@ -327,5 +294,52 @@ void drawBoard(player p1, enemy enemies[]) {
     }
     cout << endl;
     cout << "Score: " << score << endl;
+}
+*/
+
+/*
+void moveEnemies(enemy enemies[], player& p1) {
+    static int enemyDirection = 1;
+    static bool enemyReachedEdge = false;
+    for (int i = 0; i < numOfEnemies; i++) {
+        if (enemies[i].isAlive) {
+            if (enemies[i].enemyX == 0 && enemies[i].isAlive == true) {
+                enemyDirection = 1;
+                enemyReachedEdge = true;
+            }
+            else if (enemies[i].enemyX == WIDTH - 1) {
+                enemyDirection = -1;
+                enemyReachedEdge = true;
+            }
+            else {
+                enemyReachedEdge = false;
+            }
+            if (enemies[i].enemyIsFiring == false) {
+                srand(time(NULL));
+                int chance = rand() % 20;
+                if (chance == 0) {
+                    enemies[i].enemyIsFiring = true;
+                    enemies[i].enemyBulletX = enemies[i].enemyX;
+                    enemies[i].enemyBulletY = enemies[i].enemyY + 1;
+                }
+            }
+            if (enemies[i].enemyIsFiring == true) {
+                enemies[i].enemyBulletY++;
+                if (enemies[i].enemyBulletY == p1.playerY && enemies[i].enemyBulletX == p1.playerX) {
+                    gameOver = true;
+                    return;
+                }
+            }
+            enemies[i].enemyX += enemyDirection;
+        }
+    }
+    // Move enemies down if they have reached the edge
+    if (enemyReachedEdge) {
+        for (int i = 0; i < numOfEnemies; i++) {
+            if (enemies[i].isAlive) {
+                enemies[i].enemyY++;
+            }
+        }
+    }
 }
 */
