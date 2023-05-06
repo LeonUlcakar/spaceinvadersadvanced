@@ -11,7 +11,7 @@ const unsigned int ENEMY_START_X = 1;
 const unsigned int ENEMY_START_Y = 1;
 const unsigned int ENEMY_SPACING = 4;
 const unsigned int numOfEnemies = 6;
-const unsigned int rows = 4;
+const unsigned int rows = 1;
 bool gameOver = false;
 int unsigned score = 0;
 const unsigned int totalNumOfEn = rows * numOfEnemies;
@@ -231,6 +231,18 @@ void moveBullets(player& p1, enemy enemies[]) {
     }
 }
 
+
+int getCurrentEnemies(enemy enemies[]) {
+    int alive = 0;
+    for (int i = 0; i < totalNumOfEn; i++) {
+        if (enemies[i].isAlive) {
+            alive++;
+        }
+
+    }
+    return alive;
+}
+
 int main() {
     srand(time(NULL));
     struct player player1;
@@ -239,10 +251,18 @@ int main() {
     enemyInit(enemies);
     char input;
     int timer = 0;
+    int numOfAlive;
     while (!gameOver) {
-        
-        if (timer % 5 == 1) {
-            moveEnemies(enemies, player1);
+        numOfAlive = getCurrentEnemies(enemies);
+        if (numOfAlive < 5) {
+            if (timer % 2 == 0) {
+                moveEnemies(enemies, player1);
+            }
+        }
+        else {
+            if (timer % 5 == 0) {
+                moveEnemies(enemies, player1);
+            }
         }
         moveBullets(player1, enemies);
         drawBoard(player1, enemies);
