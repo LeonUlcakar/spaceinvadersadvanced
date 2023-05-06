@@ -9,8 +9,8 @@ const unsigned int PLAYER_START_X = WIDTH / 2;
 const unsigned int PLAYER_START_Y = HEIGHT - 2;
 const unsigned int ENEMY_START_X = 1;
 const unsigned int ENEMY_START_Y = 1;
-const unsigned int ENEMY_SPACING = 6;
-const unsigned int numOfEnemies = 5;
+const unsigned int ENEMY_SPACING = 4;
+const unsigned int numOfEnemies = 6;
 const unsigned int rows = 4;
 bool gameOver = false;
 int unsigned score = 0;
@@ -150,19 +150,22 @@ void moveEnemies(enemy enemies[], player &p1) {
         if (enemies[i].isAlive) {
             if (enemies[i].enemyX <= 0) {
                 enemyDirection = 1;
-                enemies[i].enemyY++;
-                /*
-                for (int j = 0; j < totalNumOfEn; j++) {
-                    enemies[j].enemyY++;
+                for (int j = 0; j < rows; j++) {
+                    for (int i = 0; i < numOfEnemies; i++) {
+                        enemies[j * numOfEnemies + i].enemyY++;
+                    }
                 }
-                */
+                break;
+
             }
             else if (enemies[i].enemyX == WIDTH - 1) {
                 enemyDirection = -1;
-                for (int j = 0; j < totalNumOfEn; j++) {
-                    enemies[j].enemyY++;
-                    
+                for (int j = 0; j < rows; j++) {
+                    for (int i = 0; i < numOfEnemies; i++) {
+                        enemies[j * numOfEnemies + i].enemyY++;
+                    }
                 }
+                break;
             }
             else {
 
@@ -235,17 +238,20 @@ int main() {
     playerInit(player1);
     enemyInit(enemies);
     char input;
-
+    int timer = 0;
     while (!gameOver) {
-        moveEnemies(enemies, player1);
+        
+        if (timer % 5 == 1) {
+            moveEnemies(enemies, player1);
+        }
         moveBullets(player1, enemies);
         drawBoard(player1, enemies);
         if (_kbhit()) {
             input = _getch();
             movePlayer(input, player1);
         }
-
-        Sleep(100);
+        timer++;
+        Sleep(10);
     }
     cout << "GAME OVER";
     return 0;
