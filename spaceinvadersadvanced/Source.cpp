@@ -10,8 +10,8 @@ const unsigned int PLAYER_START_Y = HEIGHT - 2;
 const unsigned int ENEMY_START_X = 1;
 const unsigned int ENEMY_START_Y = 1;
 const unsigned int ENEMY_SPACING = 4;
-const unsigned int numOfEnemies = 6;
-const unsigned int rows = 1;
+const unsigned int numOfEnemies = 8;
+const unsigned int rows = 3;
 bool gameOver = false;
 int unsigned score = 0;
 const unsigned int totalNumOfEn = rows * numOfEnemies;
@@ -98,25 +98,6 @@ void enemyInit(enemy enemies[]) {
     }
 }
 
-/*
-void enemyInit(enemy enemies[]) {
-    for (int j = 0; j < rows; j++) {
-        for (int i = 0; i < numOfEnemies; i++) {
-            if (i == 0) {
-                enemies[i].enemyX = ENEMY_START_X;
-                enemies[i].enemyY = ENEMY_START_Y + j;
-            }
-            else {
-                enemies[i].enemyX = enemies[i - 1].enemyX + ENEMY_SPACING;
-                enemies[i].enemyY = enemies[i - 1].enemyY;
-            }
-            enemies[i].enemyIsFiring = false;
-        }
-    }
-    
-    
-}
-*/
 void movePlayer(char input, player& p1) {
     switch (input) {
     case 'a':
@@ -141,8 +122,6 @@ void movePlayer(char input, player& p1) {
         break;
     }
 }
-
-
 
 void moveEnemies(enemy enemies[], player &p1) {
     static int enemyDirection = 1;
@@ -172,7 +151,7 @@ void moveEnemies(enemy enemies[], player &p1) {
             }
             if (enemies[i].enemyIsFiring == false) {
                 srand(time(NULL));
-                int chance = rand() % 20;
+                int chance = rand() % 5;
                 if (chance == 0) {
                     enemies[i].enemyIsFiring = true;
                     enemies[i].enemyBulletX = enemies[i].enemyX;
@@ -398,5 +377,25 @@ void moveEnemies(enemy enemies[], player& p1) {
             }
         }
     }
+}
+*/
+
+/*
+void enemyInit(enemy enemies[]) {
+    for (int j = 0; j < rows; j++) {
+        for (int i = 0; i < numOfEnemies; i++) {
+            if (i == 0) {
+                enemies[i].enemyX = ENEMY_START_X;
+                enemies[i].enemyY = ENEMY_START_Y + j;
+            }
+            else {
+                enemies[i].enemyX = enemies[i - 1].enemyX + ENEMY_SPACING;
+                enemies[i].enemyY = enemies[i - 1].enemyY;
+            }
+            enemies[i].enemyIsFiring = false;
+        }
+    }
+
+
 }
 */
