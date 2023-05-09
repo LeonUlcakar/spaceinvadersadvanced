@@ -10,8 +10,8 @@ const unsigned int PLAYER_START_Y = HEIGHT - 2;
 const unsigned int ENEMY_START_X = 1;
 const unsigned int ENEMY_START_Y = 1;
 const unsigned int ENEMY_SPACING = 4;
-const unsigned int numOfEnemies = 8;
-const unsigned int rows = 3;
+const unsigned int numOfEnemies = 7;
+const unsigned int rows = 4;
 bool gameOver = false;
 int unsigned score = 0;
 const unsigned int totalNumOfEn = rows * numOfEnemies;
@@ -31,7 +31,11 @@ struct enemy {
     int unsigned enemyBulletX = 0;
     int unsigned enemyBulletY = 0;
     bool isAlive = true;
+    bool enemyBelow = false;
 };
+
+
+
 
 void drawBoard(player p1, enemy enemies[]) {
     system("cls");
@@ -123,6 +127,7 @@ void movePlayer(char input, player& p1) {
     }
 }
 
+
 void moveEnemies(enemy enemies[], player &p1) {
     static int enemyDirection = 1;
     for (int i = 0; i < totalNumOfEn; i++) {
@@ -149,7 +154,25 @@ void moveEnemies(enemy enemies[], player &p1) {
             else {
 
             }
-            if (enemies[i].enemyIsFiring == false) {
+            
+            for (int j = 0; j < rows; j++) {
+                for (int i = 0; i < numOfEnemies; i++) {
+                    if (enemies[j * numOfEnemies + i].isAlive) {
+                        enemies[j + i].enemyBelow = true;
+                        //break;
+                    }
+                }
+            }
+            /*
+            int row = (i / numOfEnemies) + 1;
+            for (int k = 0; k < numOfEnemies; k++) {
+                if (enemies[row * numOfEnemies + k].isAlive) {
+                    enemies[k].enemyBelow = true;
+                
+                }
+            }
+            */
+            if (enemies[i].enemyIsFiring == false && !enemies[i].enemyBelow) {
                 srand(time(NULL));
                 int chance = rand() % 5;
                 if (chance == 0) {
@@ -176,6 +199,71 @@ void moveEnemies(enemy enemies[], player &p1) {
         enemies[i].enemyX += enemyDirection;
     }
 }
+
+/*
+void moveEnemies(enemy enemies[], player& p1) {
+    static int enemyDirection = 1;
+    for (int i = 0; i < totalNumOfEn; i++) {
+        if (enemies[i].isAlive) {
+            if (enemies[i].enemyX <= 0) {
+                enemyDirection = 1;
+                for (int j = 0; j < rows; j++) {
+                    for (int i = 0; i < numOfEnemies; i++) {
+                        enemies[j * numOfEnemies + i].enemyY++;
+                    }
+                }
+                break;
+            }
+            else if (enemies[i].enemyX == WIDTH - 1) {
+                enemyDirection = -1;
+                for (int j = 0; j < rows; j++) {
+                    for (int i = 0; i < numOfEnemies; i++) {
+                        enemies[j * numOfEnemies + i].enemyY++;
+                    }
+                }
+                break;
+            }
+            else {
+                // Check if there is an alive enemy below this one
+               
+                int row = (i / numOfEnemies) + 1;
+                for (int k = 0; k < numOfEnemies; k++) {
+                    if (enemies[row * numOfEnemies + k].isAlive) {
+                        enemies[k].enemyBelow = true;
+                        break;
+                    }
+                }
+                if (!enemies[i].enemyBelow && enemies[i].enemyIsFiring == false) {
+                    srand(time(NULL));
+                    int chance = rand() % 5;
+                    if (chance == 0) {
+                        enemies[i].enemyBulletX = enemies[i].enemyX;
+                        enemies[i].enemyBulletY = enemies[i].enemyY + 1;
+                        enemies[i].enemyIsFiring = true;
+                    }
+                }
+                if (enemies[i].enemyIsFiring == true) {
+                    enemies[i].enemyBulletY++;
+                    if (enemies[i].enemyBulletY == p1.playerY && enemies[i].enemyBulletX == p1.playerX) {
+                        gameOver = true;
+                    }
+                    else if (enemies[i].enemyBulletY == HEIGHT - 1) {
+                        enemies[i].enemyIsFiring = false;
+                    }
+                }
+                if (enemies[i].enemyY == p1.playerY) {
+                    gameOver = true;
+                }
+            }
+        }
+        for (int i = 0; i < totalNumOfEn; i++) {
+            enemies[i].enemyX += enemyDirection;
+        }
+    }
+    // ... rest of the function
+}
+*/
+
 
 void moveBullets(player& p1, enemy enemies[]) {
     if (p1.isFiring) {
