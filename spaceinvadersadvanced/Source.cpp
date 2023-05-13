@@ -84,9 +84,14 @@ void drawBoard(player p1, enemy enemies[], obstacle obstacles[]) {
                 }
                 bool obstacleThere = false;
                 for (int m = 0; m < numOfObstacles; m++) {
-                    if (i == obstacles[m].obstacleX && j = obstacles[m].obstacleY) {
-
+                    if (i == obstacles[m].obstacleY && j == obstacles[m].obstacleX) {
+                        cout << "#";
+                        obstacleThere = true;
+                        break;
                     }
+                }
+                if (!obstacleThere) {
+                    cout << " ";
                 }
             }
             if ((j == WIDTH - 1)) {
@@ -118,6 +123,8 @@ void enemyInit(enemy enemies[]) {
         }
     }
 }
+
+
 
 void movePlayer(char input, player& p1) {
     switch (input) {
@@ -258,6 +265,7 @@ int getCurrentEnemies(enemy enemies[]) {
 
 int main() {
     srand(time(NULL));
+    struct obstacle obstacles[numOfObstacles];
     struct player player1;
     struct enemy enemies[totalNumOfEn]{};
     playerInit(player1);
