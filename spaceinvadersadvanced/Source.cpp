@@ -10,12 +10,17 @@ const unsigned int PLAYER_START_Y = HEIGHT - 2;
 const unsigned int ENEMY_START_X = 1;
 const unsigned int ENEMY_START_Y = 1;
 const unsigned int ENEMY_SPACING = 4;
+const unsigned int OBSTACLE_START_X = HEIGHT - 4;
+const unsigned int OBSTACLE_START_Y = 1;
+const unsigned int OBSTACLE_SPACING = 1;
 const unsigned int numOfEnemies = 6;
-const unsigned int rows = 3;
+const unsigned int enemyRows = 3;
 bool gameOver = false;
 int unsigned score = 0;
-const unsigned int totalNumOfEn = rows * numOfEnemies;
-const unsigned int numOfObstacles = 10;
+const unsigned int totalNumOfEn = enemyRows * numOfEnemies;
+const unsigned int numOfObstacles = WIDTH;
+const unsigned int obstacleRows = 1;
+const unsigned int totalNumOfOb = obstacleRows * numOfObstacles;
 
 struct player {
     unsigned int playerX = WIDTH / 2;
@@ -83,7 +88,7 @@ void drawBoard(player p1, enemy enemies[], obstacle obstacles[]) {
                     cout << " ";
                 }
                 bool obstacleThere = false;
-                for (int m = 0; m < numOfObstacles; m++) {
+                for (int m = 0; m < totalNumOfOb; m++) {
                     if (i == obstacles[m].obstacleY && j == obstacles[m].obstacleX) {
                         cout << "#";
                         obstacleThere = true;
@@ -114,7 +119,7 @@ void playerInit(player& p1) {
 }
 
 void enemyInit(enemy enemies[]) {
-    for (int j = 0; j < rows; j++) {
+    for (int j = 0; j < enemyRows; j++) {
         for (int i = 0; i < numOfEnemies; i++) {
             enemies[j * numOfEnemies + i].enemyX = ENEMY_START_X + i * ENEMY_SPACING;
             enemies[j * numOfEnemies + i].enemyY = ENEMY_START_Y + j;
@@ -124,7 +129,25 @@ void enemyInit(enemy enemies[]) {
     }
 }
 
+void obstacleInti(obstacle obstacles[]) {
+    srand(time(NULL));
+    int obstacleChance = rand() % 5;
+    for (int j = 0; j < obstacleRows; j++) {
+        for (int i = 0; i < numOfObstacles; i++) {
+            if (obstacleChance == 0) {
+                obstacles[j * numOfObstacles + i].obstacleX = OBSTACLE_START_X + i * OBSTACLE_SPACING;
+                obstacles[j * numOfObstacles + i].obstacleY = OBSTACLE_START_Y + j;
+                obstacles[j * numOfObstacles + i].isThere = true;
+            }
+            else {
+                obstacles[j * numOfObstacles + i].obstacleX = OBSTACLE_START_X + i * OBSTACLE_SPACING;
+                obstacles[j * numOfObstacles + i].obstacleY = OBSTACLE_START_Y + j;
+                obstacles[j * numOfObstacles + i].isThere = false;
+            }
+        }
+    }
 
+}
 
 void movePlayer(char input, player& p1) {
     switch (input) {
@@ -158,7 +181,7 @@ void moveEnemies(enemy enemies[], player& p1) {
         if (enemies[i].isAlive) {
             if (enemies[i].enemyX <= 0) {
                 enemyDirection = 1;
-                for (int j = 0; j < rows; j++) {
+                for (int j = 0; j < enemyRows; j++) {
                     for (int i = 0; i < numOfEnemies; i++) {
                         enemies[j * numOfEnemies + i].enemyY++;
                     }
@@ -168,7 +191,7 @@ void moveEnemies(enemy enemies[], player& p1) {
             }
             else if (enemies[i].enemyX == WIDTH - 1) {
                 enemyDirection = -1;
-                for (int j = 0; j < rows; j++) {
+                for (int j = 0; j < enemyRows; j++) {
                     for (int i = 0; i < numOfEnemies; i++) {
                         enemies[j * numOfEnemies + i].enemyY++;
                     }
@@ -339,10 +362,10 @@ const unsigned int ENEMY_START_X = 1;
 const unsigned int ENEMY_START_Y = 1;
 const unsigned int ENEMY_SPACING = 4;
 const unsigned int numOfEnemies = 7;
-const unsigned int rows = 4;
+const unsigned int enemyRows = 4;
 bool gameOver = false;
 int unsigned score = 0;
-const unsigned int totalNumOfEn = rows * numOfEnemies;
+const unsigned int totalNumOfEn = enemyRows * numOfEnemies;
 
 struct player {
     int unsigned playerX = WIDTH / 2;
@@ -420,7 +443,7 @@ void playerInit(player& p1) {
 }
 
 void enemyInit(enemy enemies[]) {
-    for (int j = 0; j < rows; j++) {
+    for (int j = 0; j < enemyRows; j++) {
         for (int i = 0; i < numOfEnemies; i++) {
             enemies[j * numOfEnemies + i].enemyX = ENEMY_START_X + i * ENEMY_SPACING;
             enemies[j * numOfEnemies + i].enemyY = ENEMY_START_Y + j;
@@ -462,7 +485,7 @@ void moveEnemies(enemy enemies[], player &p1) {
         if (enemies[i].isAlive) {
             if (enemies[i].enemyX <= 0) {
                 enemyDirection = 1;
-                for (int j = 0; j < rows; j++) {
+                for (int j = 0; j < enemyRows; j++) {
                     for (int i = 0; i < numOfEnemies; i++) {
                         enemies[j * numOfEnemies + i].enemyY++;
                     }
@@ -472,7 +495,7 @@ void moveEnemies(enemy enemies[], player &p1) {
             }
             else if (enemies[i].enemyX == WIDTH - 1) {
                 enemyDirection = -1;
-                for (int j = 0; j < rows; j++) {
+                for (int j = 0; j < enemyRows; j++) {
                     for (int i = 0; i < numOfEnemies; i++) {
                         enemies[j * numOfEnemies + i].enemyY++;
                     }
@@ -483,7 +506,7 @@ void moveEnemies(enemy enemies[], player &p1) {
 
             }
             
-            for (int j = 0; j < rows; j++) {
+            for (int j = 0; j < enemyRows; j++) {
                 for (int i = 0; i < numOfEnemies; i++) {
                     if (enemies[j * numOfEnemies + i].isAlive) {
                         enemies[j + i].enemyBelow = true;
@@ -728,7 +751,7 @@ void moveEnemies(enemy enemies[], player& p1) {
 
 /*
 void enemyInit(enemy enemies[]) {
-    for (int j = 0; j < rows; j++) {
+    for (int j = 0; j < enemyRows; j++) {
         for (int i = 0; i < numOfEnemies; i++) {
             if (i == 0) {
                 enemies[i].enemyX = ENEMY_START_X;
@@ -753,7 +776,7 @@ void moveEnemies(enemy enemies[], player& p1) {
         if (enemies[i].isAlive) {
             if (enemies[i].enemyX <= 0) {
                 enemyDirection = 1;
-                for (int j = 0; j < rows; j++) {
+                for (int j = 0; j < enemyRows; j++) {
                     for (int i = 0; i < numOfEnemies; i++) {
                         enemies[j * numOfEnemies + i].enemyY++;
                     }
@@ -762,7 +785,7 @@ void moveEnemies(enemy enemies[], player& p1) {
             }
             else if (enemies[i].enemyX == WIDTH - 1) {
                 enemyDirection = -1;
-                for (int j = 0; j < rows; j++) {
+                for (int j = 0; j < enemyRows; j++) {
                     for (int i = 0; i < numOfEnemies; i++) {
                         enemies[j * numOfEnemies + i].enemyY++;
                     }
