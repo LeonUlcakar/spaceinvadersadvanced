@@ -18,7 +18,7 @@ const unsigned int enemyRows = 3;
 bool gameOver = false;
 int unsigned score = 0;
 const unsigned int totalNumOfEn = enemyRows * numOfEnemies;
-const unsigned int numOfObstacles = WIDTH;
+const unsigned int numOfObstacles = 3;
 const unsigned int obstacleRows = 1;
 const unsigned int totalNumOfOb = obstacleRows * numOfObstacles;
 
@@ -111,6 +111,59 @@ void drawBoard(player p1, enemy enemies[], obstacle obstacles[]) {
     cout << endl;
     cout << "Score: " << score << endl;
 }
+/*
+void drawBoard(player p1, enemy enemies[]) {
+    //system("cls");
+    COORD coord;
+    coord.X = 0;
+    coord.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    for (int i = 0; i < WIDTH + 2; i++) {
+        cout << "-";
+    }
+    cout << endl;
+    for (int i = 0; i < HEIGHT; i++) {
+        for (int j = 0; j < WIDTH; j++) {
+            if (j == 0) {
+                cout << "|";
+            }
+            if (i == p1.playerY && j == p1.playerX) {
+                cout << "A";
+            }
+            else if (i == p1.bulletY && j == p1.bulletX) {
+                cout << "*";
+            }
+            else {
+                bool enemyAlive = false;
+                for (int k = 0; k < totalNumOfEn; k++) {
+                    if (i == enemies[k].enemyY && j == enemies[k].enemyX) {
+                        cout << "M";
+                        enemyAlive = true;
+                        break;
+                    }
+                    else if (i == enemies[k].enemyBulletY && j == enemies[k].enemyBulletX) {
+                        cout << "*";
+                        enemyAlive = true;
+                        break;
+                    }
+                }
+                if (!enemyAlive) {
+                    cout << " ";
+                }
+            }
+            if ((j == WIDTH - 1)) {
+                cout << "|";
+            }
+        }
+        cout << endl;
+    }
+    for (int i = 0; i < WIDTH + 2; i++) {
+        cout << "-";
+    }
+    cout << endl;
+    cout << "Score: " << score << endl;
+}
+*/
 
 void playerInit(player& p1) {
     p1.playerX = WIDTH / 2;
@@ -129,11 +182,13 @@ void enemyInit(enemy enemies[]) {
     }
 }
 
-void obstacleInti(obstacle obstacles[]) {
-    srand(time(NULL));
-    int obstacleChance = rand() % 5;
+void obstacleInit(obstacle obstacles[]) {
+    
+    int obstacleChance;
     for (int j = 0; j < obstacleRows; j++) {
         for (int i = 0; i < numOfObstacles; i++) {
+            srand(time(NULL));
+            obstacleChance = rand() % 5;
             if (obstacleChance == 0) {
                 obstacles[j * numOfObstacles + i].obstacleX = OBSTACLE_START_X + i * OBSTACLE_SPACING;
                 obstacles[j * numOfObstacles + i].obstacleY = OBSTACLE_START_Y + j;
@@ -205,7 +260,7 @@ void moveEnemies(enemy enemies[], player& p1) {
             for (int j = i + numOfEnemies; j < totalNumOfEn; j += numOfEnemies) {
                 if (enemies[j].isAlive) {
                     enemies[j].enemyBelow = true;
-                    //continue;
+                    
                 }
             }
 
@@ -238,6 +293,21 @@ void moveEnemies(enemy enemies[], player& p1) {
         enemies[i].enemyX += enemyDirection;
     }
 }
+
+void obstaclesHit(obstacle obstacles[], player p1) {
+    for (int i = 0; i < totalNumOfOb; i++) {
+        if (p1.bulletY == obstacles[i].obstacleY && p1.bulletX == obstacles[i].obstacleX) {
+            p1.isFiring = false;
+            obstacles[i].obstacleX = ' ';
+            obstacles[i].obstacleY = ' ';
+            p1.bulletX = ' ';
+            p1.bulletY = ' ';
+            score += 1;
+            obstacles[i].isThere = false;
+        }
+    }
+}
+
 
 
 
@@ -293,6 +363,7 @@ int main() {
     struct enemy enemies[totalNumOfEn]{};
     playerInit(player1);
     enemyInit(enemies);
+    obstacleInit(obstacles);
     char input;
     int timer = 0;
     int numOfAlive;
@@ -309,6 +380,7 @@ int main() {
             }
         }
         moveBullets(player1, enemies);
+        //drawBoard(player1, enemies);
         drawBoard(player1, enemies, obstacles);
         if (_kbhit()) {
             input = _getch();
