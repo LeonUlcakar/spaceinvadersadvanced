@@ -1,7 +1,9 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
 
 const unsigned int WIDTH = 40;
 const unsigned int HEIGHT = 20;
@@ -10,7 +12,7 @@ const unsigned int PLAYER_START_Y = HEIGHT - 2;
 const unsigned int ENEMY_START_X = 1;
 const unsigned int ENEMY_START_Y = 1;
 const unsigned int ENEMY_SPACING = 4;
-const unsigned int OBSTACLE_START_X = HEIGHT - 4;
+const unsigned int OBSTACLE_START_X = 3;
 const unsigned int OBSTACLE_START_Y = 1;
 const unsigned int OBSTACLE_SPACING = 1;
 const unsigned int numOfEnemies = 6;
@@ -43,7 +45,7 @@ struct enemy {
 struct obstacle {
     unsigned int obstacleX = 0;
     unsigned int obstacleY = 0;
-    bool isThere = true;
+    bool isThere = false;
 };
 
 
@@ -71,6 +73,18 @@ void drawBoard(player p1, enemy enemies[], obstacle obstacles[]) {
                 cout << "*";
             }
             else {
+                for (int m = 0; m < totalNumOfOb; m++) {
+                    if (i == obstacles[m].obstacleY && j == obstacles[m].obstacleX && obstacles[m].isThere) {
+                        cout << "#";
+                        //obstacleThere = true;
+                        break;
+                    }
+                    else if (i == obstacles[m].obstacleY && j == obstacles[m].obstacleX && !obstacles[m].isThere) {
+                        cout << " ";
+                        //obstacleThere = true;
+                        break;
+                    }
+                }
                 bool enemyAlive = false;
                 for (int k = 0; k < totalNumOfEn; k++) {
                     if (i == enemies[k].enemyY && j == enemies[k].enemyX) {
@@ -85,17 +99,6 @@ void drawBoard(player p1, enemy enemies[], obstacle obstacles[]) {
                     }
                 }
                 if (!enemyAlive) {
-                    cout << " ";
-                }
-                bool obstacleThere = false;
-                for (int m = 0; m < totalNumOfOb; m++) {
-                    if (i == obstacles[m].obstacleY && j == obstacles[m].obstacleX) {
-                        cout << "#";
-                        obstacleThere = true;
-                        break;
-                    }
-                }
-                if (!obstacleThere) {
                     cout << " ";
                 }
             }
@@ -184,7 +187,7 @@ void enemyInit(enemy enemies[]) {
 
 void obstacleInit(obstacle obstacles[]) {
     
-    int obstacleChance;
+    unsigned int obstacleChance;
     for (int j = 0; j < obstacleRows; j++) {
         for (int i = 0; i < numOfObstacles; i++) {
             srand(time(NULL));
@@ -294,7 +297,7 @@ void moveEnemies(enemy enemies[], player& p1) {
     }
 }
 
-void obstaclesHit(obstacle obstacles[], player p1) {
+void obstaclesHit(obstacle obstacles[], player p1, enemy enemies[]) {
     for (int i = 0; i < totalNumOfOb; i++) {
         if (p1.bulletY == obstacles[i].obstacleY && p1.bulletX == obstacles[i].obstacleX) {
             p1.isFiring = false;
@@ -304,6 +307,14 @@ void obstaclesHit(obstacle obstacles[], player p1) {
             p1.bulletY = ' ';
             score += 1;
             obstacles[i].isThere = false;
+        }
+        for (int j = 0; j < totalNumOfEn; j++) {
+            if (enemies[j].enemyBulletY == obstacles[i].obstacleY && enemies[j].enemyBulletX == obstacles[i].obstacleX) {
+                enemies[j].enemyIsFiring = false;
+                obstacles[i].obstacleX = ' ';
+                obstacles[i].obstacleY = ' ';
+                obstacles[i].isThere = false;
+            }
         }
     }
 }
